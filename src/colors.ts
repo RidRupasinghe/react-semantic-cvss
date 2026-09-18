@@ -11,4 +11,4 @@ export const Colors = {
   securityCaseSeverityMedium: "#fbbd08",
   securityCaseSeverityHigh: "#f2711c",
   securityCaseSeverityCritical: "#db2828",
-};
+} as const;
