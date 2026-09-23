@@ -1,181 +1,194 @@
 # react-semantic-cvss
 
-> Interactive CVSS v3.1 base score calculator, vector parser, and rating visualizer for React applications.
+> Interactive CVSS v3.1 base score calculator, vector parser, and severity rating visualizer for React, built on Semantic UI.
 
-[![NPM Version](https://img.shields.io/npm/v/react-semantic-cvss.svg)](https://www.npmjs.com/package/react-semantic-cvss)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Build Status](https://github.com/RidRupasinghe/react-semantic-cvss/actions/workflows/ci.yml/badge.svg)](https://github.com/RidRupasinghe/react-semantic-cvss/actions)
-
----
+[![npm version](https://img.shields.io/npm/v/react-semantic-cvss.svg)](https://www.npmjs.com/package/react-semantic-cvss)
+[![npm downloads](https://img.shields.io/npm/dm/react-semantic-cvss.svg)](https://www.npmjs.com/package/react-semantic-cvss)
+[![types](https://img.shields.io/npm/types/react-semantic-cvss.svg)](https://www.npmjs.com/package/react-semantic-cvss)
+[![license: MIT](https://img.shields.io/npm/l/react-semantic-cvss.svg)](https://opensource.org/licenses/MIT)
+[![CI](https://github.com/RidRupasinghe/react-semantic-cvss/actions/workflows/ci.yml/badge.svg)](https://github.com/RidRupasinghe/react-semantic-cvss/actions/workflows/ci.yml)
 
 ## Features
 
-- 🛡️ **FIRST CVSS v3.1 Spec-Compliant**: Exact implementation of the official CVSS v3.1 specification, scoring equations, and `Roundup` algorithm.
-- ⚛️ **Modern React Support**: Fully compatible with React 16.8+, React 17, React 18, and React 19 (including Next.js App Router `"use client"`).
-- 📦 **Dual ESM & CommonJS**: Ships with zero-overhead modern ES modules (`.mjs`) and CommonJS (`.cjs`) with rigorous export maps.
-- 📘 **TypeScript-First**: Complete type declarations (`.d.ts` and `.d.mts`) with 100% type coverage and strict types.
-- 🧩 **Headless Utilities**: Export pure calculation, vector parsing, and rating functions without needing to mount the React UI.
-- ♿ **Accessible**: ARIA radio group semantics (`role="radiogroup"`, `role="radio"`), keyboard navigation, and live screen reader regions.
-
----
+- **CVSS v3.1 compliant**: implements the FIRST CVSS v3.1 base score equations, including the official `Roundup` function.
+- **React 16.8 – 19**: works with any hooks-capable React version. Ships with a `"use client"` directive for the Next.js App Router.
+- **TypeScript types included**: no separate `@types` package needed.
+- **ESM and CommonJS builds** with a proper `exports` map.
+- **Headless utilities**: use the scoring, parsing and rating functions without rendering any UI (e.g. on a server or in a CLI).
+- **Accessible**: metric groups use radio-group semantics, are keyboard navigable, and the score is announced to screen readers.
+- **Mobile friendly**: button groups adapt to narrow screens.
 
 ## Installation
 
 ```bash
-npm install react-semantic-cvss semantic-ui-react styled-components
-# or
-yarn add react-semantic-cvss semantic-ui-react styled-components
-# or
-pnpm add react-semantic-cvss semantic-ui-react styled-components
+npm install react-semantic-cvss semantic-ui-react semantic-ui-css styled-components
 ```
 
-### Styling Setup
-To apply the Semantic UI styling, import the stylesheet into your application's entrypoint (e.g., `index.js`, `App.tsx`, or `main.jsx`):
+`react-semantic-cvss` relies on the following peer dependencies, which your app must provide:
 
-```javascript
+| Package | Supported versions |
+| :--- | :--- |
+| `react`, `react-dom` | `>=16.8.0` |
+| `semantic-ui-react` | `^0.88.2`, `^1.0.0` or `^2.0.0` |
+| `styled-components` | `^5.0.0` or `^6.0.0` |
+
+Then import the Semantic UI stylesheet once, in your app's entry point (e.g. `main.tsx`, `index.js` or `_app.tsx`):
+
+```js
 import 'semantic-ui-css/semantic.min.css';
 ```
 
----
+> The component does not include this stylesheet itself, so it won't be added twice if your app already uses Semantic UI.
 
-## Usage
-
-### 1. Interactive UI Component
+## Quick start
 
 ```tsx
-import React, { useState } from 'react';
+import { useState } from 'react';
 import CVSSCalc, { CVSSCalculationResult } from 'react-semantic-cvss';
-import 'semantic-ui-css/semantic.min.css';
 
-const App = () => {
-  const [vector, setVector] = useState("CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H");
+export default function App() {
+  const [vector, setVector] = useState('CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H');
 
   const handleChange = (result: CVSSCalculationResult) => {
-    console.log("Vector:", result.string);
-    console.log("Numeric Score:", result.score);         // e.g. 10.0
-    console.log("Score String:", result.scoreString);   // e.g. "10.0"
-    console.log("Severity:", result.ratingDetails.name); // "Critical"
     setVector(result.string);
+
+    if (result.isComplete) {
+      console.log(result.score);              // 10
+      console.log(result.scoreString);        // "10.0"
+      console.log(result.ratingDetails.name); // "Critical"
+    }
   };
 
-  return (
-    <CVSSCalc
-      title="Common Vulnerability Scoring System (v3.1)"
-      vector={vector}
-      readOnly={false}
-      showHintsOnButton={true}
-      showHintsOnButtonGroupName={true}
-      onChange={handleChange}
-    />
-  );
-};
-
-export default App;
+  return <CVSSCalc vector={vector} onChange={handleChange} />;
+}
 ```
 
----
+### Read-only display
 
-### 2. Headless Domain Functions (No React UI required)
+To show an existing score without letting the user change it:
 
-You can use the scoring and parsing engine in backend services, CLI tools, or custom UIs:
+```tsx
+<CVSSCalc
+  vector="CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:N/A:L"
+  readOnly
+  showHintsOnButton={false}
+  showHintsOnButtonGroupName={false}
+/>
+```
 
-```typescript
-import {
-  calculateCVSS31,
-  parseCVSS31Vector,
-  getSeverityRating,
-  roundup
-} from 'react-semantic-cvss';
+## Component props
 
-// 1. Calculate score from selections
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `vector` | `string` | `""` | CVSS vector to display, e.g. `"CVSS:3.1/AV:N/AC:L/..."`. The component updates when this changes. An invalid vector shows an error message. |
+| `onChange` | `(result: CVSSCalculationResult) => void` | – | Called every time the user selects a metric value. |
+| `title` | `string` | `"Common Vulnerability Scoring System"` | Heading shown above the score. Pass `""` to hide it. |
+| `readOnly` | `boolean` | `false` | Displays the selections without allowing changes. |
+| `showHintsOnButton` | `boolean` | `true` | Shows an explanation popup when hovering over or focusing a metric value button. |
+| `showHintsOnButtonGroupName` | `boolean` | `true` | Shows an explanation popup when clicking a metric name (e.g. "Attack Vector"). |
+| `className` | `string` | – | Extra CSS class for the outer wrapper. |
+
+### `onChange` behaviour
+
+- `onChange` fires only in response to user clicks, never when the `vector` prop changes. You can safely store `result.string` in state and pass it back as `vector`.
+- It also fires while the selection is still incomplete. Check `result.isComplete` before using the score.
+
+### `CVSSCalculationResult`
+
+```ts
+interface CVSSCalculationResult {
+  score: number | null;               // e.g. 8.1, or null until all 8 metrics are selected
+  scoreString: string;                // e.g. "8.1", or "-" when incomplete
+  string: string;                     // full vector, e.g. "CVSS:3.1/AV:N/...", or "" when incomplete
+  selections: Record<string, string>; // e.g. { AV: "N", AC: "L", ... }
+  ratingDetails: {
+    name: 'None' | 'Low' | 'Medium' | 'High' | 'Critical' | '?'; // '?' when incomplete
+    bottom: number | string;          // lower bound of the rating range
+    top: number | string;             // upper bound of the rating range
+    color: string;                    // hex colour for the rating
+  };
+  isComplete: boolean;                // true when all 8 base metrics are selected
+}
+```
+
+## Headless utilities
+
+The calculation engine is exported separately and has no React or DOM dependency:
+
+```ts
+import { calculateCVSS31, parseCVSS31Vector, getSeverityRating } from 'react-semantic-cvss';
+
+// Calculate a score from metric selections
 const result = calculateCVSS31({
   AV: 'N', AC: 'L', PR: 'N', UI: 'N',
   S: 'C', C: 'H', I: 'H', A: 'H'
 });
+result.score;              // 10
+result.ratingDetails.name; // "Critical"
+result.string;             // "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H"
 
-console.log(result.score);       // 10.0
-console.log(result.ratingDetails.name); // "Critical"
-console.log(result.string);      // "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H"
-
-// 2. Parse & validate a vector string
-const parsed = parseCVSS31Vector("CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:N/A:L");
+// Parse and validate a vector string
+const parsed = parseCVSS31Vector('CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:N/A:L');
 if (parsed.ok) {
-  console.log(parsed.selections); // { AV: "N", AC: "H", ... }
+  parsed.selections; // { AV: "N", AC: "H", PR: "N", ... }
 } else {
-  console.error(parsed.error?.title, parsed.error?.message);
+  parsed.error;      // e.g. { title: "Invalid Option Value", message: "Invalid value 'Z' for metric 'AV'." }
 }
 
-// 3. Get severity rating for a numeric score
-const rating = getSeverityRating(7.5);
-console.log(rating.name);  // "High"
-console.log(rating.color); // "#f2711c"
+// Get the severity rating for a score
+getSeverityRating(7.5).name;  // "High"
+getSeverityRating(7.5).color; // "#f2711c"
 ```
 
----
+| Export | Description |
+| :--- | :--- |
+| `calculateCVSS31(selections)` | Calculates the base score, rating and vector string. Alias: `calculate`. |
+| `parseCVSS31Vector(vector)` | Parses and validates a vector string. Returns `{ ok, selections }` or `{ ok: false, error }`. Alias: `parseVector`. |
+| `getSeverityRating(score)` | Returns the rating (`name`, `color`, range) for a numeric score. Alias: `severityRating`. |
+| `roundup(number)` | The CVSS v3.1 `Roundup` function. |
+| `baseMatrices`, `severityRatings`, `weight`, `popupData`, `Colors` | The metric definitions, rating ranges, metric weights, help texts and colours used by the component. |
 
-## Component Props
+All TypeScript types (`CVSSCalcProps`, `CVSSCalculationResult`, `CVSSParseResult`, `CVSSSelections`, `CVSSMetricKey`, …) are exported as well.
 
-| Prop | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `title` | `string` | `"Common Vulnerability Scoring System"` | Title displayed above the score badge. Pass `""` to hide. |
-| `vector` | `string` | `""` | Initial or controlled CVSS v3.1 vector string. |
-| `readOnly` | `boolean` | `false` | When true, renders buttons as non-interactive display only. |
-| `showHintsOnButton` | `boolean` | `true` | Enables/disables helpful explanation popups on hover & focus on buttons. |
-| `showHintsOnButtonGroupName` | `boolean` | `true` | Enables/disables helpful explanation popups on hover & focus on button group name. |
-| `onChange` | `(output: CVSSCalculationResult) => void` | `undefined` | Callback fired whenever metric selections change. |
-| `className` | `string` | `undefined` | Optional CSS class name for the wrapper form. |
+> `CVSS:3.0/` vectors are accepted by the parser. They are scored with the v3.1 equations and output as `CVSS:3.1/` vectors.
 
-### `CVSSCalculationResult` Output Shape
+## Upgrading from 1.x
 
-```typescript
-interface CVSSCalculationResult {
-  score: number | null;                // Numeric float (e.g. 8.1) or null if incomplete
-  scoreString: string;                 // Formatted string (e.g. "8.1" or "-")
-  string: string;                      // Full CVSS:3.1/... vector string
-  selections: Record<string, string>;  // Selected metrics key-value map
-  ratingDetails: {
-    name: 'None' | 'Low' | 'Medium' | 'High' | 'Critical' | '?';
-    bottom: number | string;
-    top: number | string;
-    color: string;
-  };
-  isComplete: boolean;                 // true if all 8 base metrics are selected
-}
-```
+Version 2 is a rewrite in TypeScript and includes breaking changes:
 
----
+1. **Install the peer dependencies yourself.** `react`, `react-dom`, `semantic-ui-react`, `semantic-ui-css` and `styled-components` are no longer bundled as dependencies (see [Installation](#installation)).
+2. **Import the stylesheet yourself.** The component no longer imports `semantic-ui-css` automatically. Add `import 'semantic-ui-css/semantic.min.css'` to your app's entry point.
+3. **`isShowPopups` was replaced** by `showHintsOnButton` (popups on value buttons) and `showHintsOnButtonGroupName` (popups on metric names). Both default to `true`.
+4. **`score` is now a number.** `result.score` returns a number (e.g. `7.5`) or `null`. Use `result.scoreString` for the formatted `"7.5"`.
+5. **`onChange` now fires on every selection**, not only once all metrics are selected. Check `result.isComplete` if you only need complete scores.
+6. **`onChange` no longer fires when the `vector` prop changes**, so storing `result.string` and passing it back as `vector` no longer causes loops or resets.
 
-## Migrating from v1.x to v2.x
+## Contributing
 
-1. **Peer Dependencies**: `react` and `react-dom` are now peer dependencies. Ensure they are installed in your host app (`>=16.8.0`).
-2. **CSS Import**: `react-semantic-cvss` no longer pollutes your global application CSS automatically. Add `import 'semantic-ui-css/semantic.min.css';` to your app entrypoint if you haven't already.
-3. **Controlled Component Stability**: If you pass `vector={output.string}` in a controlled loop, v2.0 safely ignores equality updates instead of clearing your state.
-4. **Numeric Score**: `result.score` now returns a real `number` float (e.g. `7.5`), while `result.scoreString` provides the formatted string `"7.5"`.
-5. **Named Imports**: Both `import CVSSCalc from 'react-semantic-cvss'` and `import { CVSSCalc, calculateCVSS31 } from 'react-semantic-cvss'` are supported.
+Bug reports, feature requests and pull requests are welcome on [GitHub](https://github.com/RidRupasinghe/react-semantic-cvss/issues).
 
----
-
-## Development & Testing
+To work on the library locally:
 
 ```bash
-# Install dependencies
+git clone https://github.com/RidRupasinghe/react-semantic-cvss.git
+cd react-semantic-cvss
 npm install
 
-# Run automated tests (Vitest)
-npm test
-
-# Run TypeScript typecheck
-npm run typecheck
-
-# Build bundle (tsup)
-npm run build
-
-# Start demo app (Vite)
-cd example && npm install && npm run dev
+npm test            # run the unit tests (Vitest)
+npm run typecheck   # type-check with TypeScript
+npm run build       # build dist/ with tsup
 ```
 
----
+The `example/` folder contains a Vite demo app that loads the library straight from `src/`, so changes appear instantly:
+
+```bash
+cd example
+npm install
+npm run dev         # http://localhost:3000
+```
+
+Before opening a pull request, make sure `npm test`, `npm run typecheck` and `npm run build` all pass. CI runs them on Node 18, 20 and 22.
 
 ## License
 
-[MIT](LICENSE) © [Rid Rupasinghe](https://github.com/RidRupasinghe)
+[MIT](LICENSE) © Rid Rupasinghe

@@ -8,6 +8,10 @@
     "type": "git",
     "url": "git+https://github.com/RidRupasinghe/react-semantic-cvss.git"
   },
+  "homepage": "https://github.com/RidRupasinghe/react-semantic-cvss#readme",
+  "bugs": {
+    "url": "https://github.com/RidRupasinghe/react-semantic-cvss/issues"
+  },
   "type": "commonjs",
   "keywords": [
     "cvss",
