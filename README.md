@@ -11,7 +11,7 @@
 ## Features
 
 - **CVSS v3.1 compliant**: implements the FIRST CVSS v3.1 base score equations, including the official `Roundup` function.
-- **React 16.8 – 19**: works with any hooks-capable React version. Ships with a `"use client"` directive for the Next.js App Router.
+- **React 16.8 – 18**: works with any hooks-capable React version up to 18. Ships with a `"use client"` directive for the Next.js App Router.
 - **TypeScript types included**: no separate `@types` package needed.
 - **ESM and CommonJS builds** with a proper `exports` map.
 - **Headless utilities**: use the scoring, parsing and rating functions without rendering any UI (e.g. on a server or in a CLI).
@@ -28,7 +28,7 @@ npm install react-semantic-cvss semantic-ui-react semantic-ui-css styled-compone
 
 | Package | Supported versions |
 | :--- | :--- |
-| `react`, `react-dom` | `>=16.8.0` |
+| `react`, `react-dom` | `^16.8.0`, `^17.0.0` or `^18.0.0` |
 | `semantic-ui-react` | `^0.88.2`, `^1.0.0` or `^2.0.0` |
 | `styled-components` | `^5.0.0` or `^6.0.0` |
 
@@ -37,6 +37,8 @@ Then import the Semantic UI stylesheet once, in your app's entry point (e.g. `ma
 ```js
 import 'semantic-ui-css/semantic.min.css';
 ```
+
+> **React 19 is not supported yet.** `semantic-ui-react` is no longer maintained and relies on `findDOMNode`, which React 19 removed, so the component crashes on React 19.
 
 > The component does not include this stylesheet itself, so it won't be added twice if your app already uses Semantic UI.
 
