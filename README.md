@@ -187,7 +187,7 @@ npm install
 npm run dev         # http://localhost:3000
 ```
 
-Before opening a pull request, make sure `npm test`, `npm run typecheck` and `npm run build` all pass. CI runs them on Node 18, 20 and 22.
+Before opening a pull request, make sure `npm test`, `npm run typecheck` and `npm run build` all pass. CI runs them on Node 22 and 24. Development requires Node 22.12 or newer.
 
 ## License
 

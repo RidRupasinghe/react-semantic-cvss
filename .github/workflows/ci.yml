@@ -15,7 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 22.x]
+        # Vitest 5 requires Node >= 22.12 (Node 18 and 20 are end-of-life)
+        node-version: [22.x, 24.x]
 
     steps:
       - uses: actions/checkout@v4
