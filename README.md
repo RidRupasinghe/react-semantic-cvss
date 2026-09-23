@@ -42,6 +42,19 @@ import 'semantic-ui-css/semantic.min.css';
 
 > The component does not include this stylesheet itself, so it won't be added twice if your app already uses Semantic UI.
 
+### Using Vite 8 or newer
+
+Vite 8's CSS minifier (Lightning CSS) rejects an invalid selector inside `semantic-ui-css`, which makes `vite build` fail. Tell it to skip that rule in `vite.config.ts`:
+
+```ts
+export default defineConfig({
+  // ...
+  css: {
+    lightningcss: { errorRecovery: true }
+  }
+});
+```
+
 ## Quick start
 
 ```tsx

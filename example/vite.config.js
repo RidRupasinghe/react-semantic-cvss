@@ -12,9 +12,9 @@ export default defineConfig({
     // Make sure the library and the example share a single copy of these
     dedupe: ['react', 'react-dom', 'styled-components', 'semantic-ui-react']
   },
-  build: {
-    // semantic-ui-css contains selectors Lightning CSS rejects, so minify with esbuild
-    cssMinify: 'esbuild'
+  css: {
+    // semantic-ui-css contains an invalid selector; skip it instead of failing the build
+    lightningcss: { errorRecovery: true }
   },
   server: {
     port: 3000
