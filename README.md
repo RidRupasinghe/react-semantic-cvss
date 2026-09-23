@@ -8,6 +8,8 @@
 [![license: MIT](https://img.shields.io/npm/l/react-semantic-cvss.svg)](https://opensource.org/licenses/MIT)
 [![CI](https://github.com/RidRupasinghe/react-semantic-cvss/actions/workflows/ci.yml/badge.svg)](https://github.com/RidRupasinghe/react-semantic-cvss/actions/workflows/ci.yml)
 
+![CVSS calculator demo](https://raw.githubusercontent.com/RidRupasinghe/react-semantic-cvss/master/demo.gif)
+
 ## Features
 
 - **CVSS v3.1 compliant**: implements the FIRST CVSS v3.1 base score equations, including the official `Roundup` function.
