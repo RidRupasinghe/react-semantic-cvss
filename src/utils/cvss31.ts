@@ -176,8 +176,9 @@ export function parseCVSS31Vector(vector: string | null | undefined): CVSSParseR
 
   for (const part of metricParts) {
     if (!part) continue;
-    const [key, value] = part.split(':');
-    if (!key || !value) {
+    const segments = part.split(':');
+    const [key, value] = segments;
+    if (segments.length !== 2 || !key || !value) {
       return {
         ok: false,
         error: {

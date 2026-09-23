@@ -46,6 +46,14 @@ describe("CVSS v3.1 Vector Parsing & Validation", () => {
     expect(result.error?.title).toBe("Invalid Option Value");
   });
 
+  it("rejects metric elements with extra ':' segments", () => {
+    const vector = "CVSS:3.1/AV:N:junk/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H";
+    const result = parseCVSS31Vector(vector);
+
+    expect(result.ok).toBe(false);
+    expect(result.error?.title).toBe("Malformed Metric");
+  });
+
   it("rejects duplicate metric keys", () => {
     const vector = "CVSS:3.1/AV:N/AV:L/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H";
     const result = parseCVSS31Vector(vector);
