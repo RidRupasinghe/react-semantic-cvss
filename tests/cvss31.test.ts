@@ -113,3 +113,23 @@ describe("Official Benchmark CVSS v3.1 Calculations", () => {
     expect(result.ratingDetails.name).toBe("?");
   });
 });
+
+describe("Invalid metric values", () => {
+  const valid = { AV: "N", AC: "L", PR: "N", UI: "N", S: "U", C: "H", I: "H", A: "H" };
+
+  it.each([
+    ["unknown value", { AV: "X" }],
+    ["wrong case", { S: "u" }],
+    ["object prototype key", { AV: "constructor" }],
+    ["markup", { C: "<img src=x onerror=alert(1)>" }],
+    ["empty string", { A: "" }]
+  ])("treats %s as incomplete instead of scoring it", (_, override) => {
+    const result = calculateCVSS31({ ...valid, ...override });
+
+    expect(result.isComplete).toBe(false);
+    expect(result.score).toBeNull();
+    expect(result.scoreString).toBe("-");
+    expect(result.string).toBe("");
+    expect(result.ratingDetails.name).toBe("?");
+  });
+});

@@ -65,8 +65,12 @@ export function getSeverityRating(score: number | null | undefined): CVSSSeverit
  * Calculate CVSS v3.1 Base Score and severity rating.
  */
 export function calculateCVSS31(selections: CVSSSelections): CVSSCalculationResult {
-  const isComplete = REQUIRED_BASE_METRIC_KEYS.every(
-    key => typeof selections[key] === 'string' && selections[key].trim() !== ''
+  // Every base metric must hold one of its allowed option values, otherwise
+  // a typo (e.g. AV:"X") would silently produce a plausible but wrong score
+  const isComplete = REQUIRED_BASE_METRIC_KEYS.every(key =>
+    baseMatrices
+      .find(m => m.key === key)
+      ?.options.some(opt => opt.name === selections[key])
   );
 
   if (!isComplete) {
