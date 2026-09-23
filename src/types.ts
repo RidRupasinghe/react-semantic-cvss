@@ -46,6 +46,7 @@ export interface CVSSCalcProps {
   vector?: string;
   readOnly?: boolean;
   showHintsOnButton?: boolean;
+  showHintsOnButtonGroupName?: boolean;
   onChange?: (output: CVSSCalculationResult) => void;
   className?: string;
 }

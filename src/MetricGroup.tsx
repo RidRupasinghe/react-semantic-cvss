@@ -8,6 +8,7 @@ interface MetricGroupProps {
   selectedValue?: string;
   readOnly: boolean;
   showHintsOnButton: boolean;
+  showHintsOnButtonGroupName: boolean;
   onSelect: (metricKey: string, value: string) => void;
 }
 
@@ -16,20 +17,25 @@ export const MetricGroup: FC<MetricGroupProps> = ({
   selectedValue,
   readOnly,
   showHintsOnButton,
+  showHintsOnButtonGroupName,
   onSelect
 }) => (
   <CVSSItem>
     <Popup
       trigger={
-        <ButtonGroupLabel tabIndex={0} role="button" aria-label={`Help for ${metric.name}`}>
-          {metric.name}
-        </ButtonGroupLabel>
+        showHintsOnButtonGroupName ? (
+          <ButtonGroupLabel $hasHint tabIndex={0} role="button" aria-label={`Help for ${metric.name}`}>
+            {metric.name}
+          </ButtonGroupLabel>
+        ) : (
+          <ButtonGroupLabel>{metric.name}</ButtonGroupLabel>
+        )
       }
-      hoverable
-      disabled={!showHintsOnButton}
+      
+      disabled={!showHintsOnButtonGroupName}
       hideOnScroll
       position="bottom left"
-      on={['hover', 'focus']}
+      on={['click']}
     >
       <div dangerouslySetInnerHTML={{ __html: metric.help }} />
     </Popup>

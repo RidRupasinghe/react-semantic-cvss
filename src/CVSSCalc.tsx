@@ -23,6 +23,7 @@ export const CVSSCalc: FC<CVSSCalcProps> = ({
   vector = "",
   readOnly = false,
   showHintsOnButton = true,
+  showHintsOnButtonGroupName = true,
   onChange,
   className
 }) => {
@@ -84,6 +85,7 @@ export const CVSSCalc: FC<CVSSCalcProps> = ({
       selectedValue={selections[metric.key]}
       readOnly={readOnly}
       showHintsOnButton={showHintsOnButton}
+      showHintsOnButtonGroupName={showHintsOnButtonGroupName}
       onSelect={handleSelectOption}
     />
   );

@@ -41,6 +41,7 @@ const App = () => {
           vector={currentVector}
           readOnly={false}
           showHintsOnButton={true}
+          showHintsOnButtonGroupName={true}
           onChange={handleCVSSChange}
         />
       </Segment>

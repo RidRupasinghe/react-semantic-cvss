@@ -134,7 +134,7 @@ export const CVSSItem = styled.div`
   }
 `;
 
-export const ButtonGroupLabel = styled.div`
+export const ButtonGroupLabel = styled.div<{ $hasHint?: boolean }>`
   line-height: 1.4285em !important;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
   font-size: 0.95em !important;
@@ -143,7 +143,7 @@ export const ButtonGroupLabel = styled.div`
   text-transform: none !important;
   margin: 6px 1em 6px 0 !important;
   // display: inline-block;
-  cursor: help;
+  cursor: ${props => (props.$hasHint ? 'help' : 'default')};
 `;
 
 export const Floating = styled.div`
