@@ -45,7 +45,7 @@ export interface CVSSCalcProps {
   title?: string;
   vector?: string;
   readOnly?: boolean;
-  isShowPopups?: boolean;
+  showHintsOnButton?: boolean;
   onChange?: (output: CVSSCalculationResult) => void;
   className?: string;
 }

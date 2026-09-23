@@ -40,7 +40,7 @@ const App = () => {
           title="Common Vulnerability Scoring System (v3.1)"
           vector={currentVector}
           readOnly={false}
-          isShowPopups={true}
+          showHintsOnButton={true}
           onChange={handleCVSSChange}
         />
       </Segment>

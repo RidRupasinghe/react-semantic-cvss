@@ -1,7 +1,5 @@
-import React, { useState, useEffect, useMemo, FC } from "react";
+import { useState, useEffect, useMemo, FC } from "react";
 import {
-  Button,
-  Popup,
   Message,
   Statistic,
   Grid,
@@ -13,19 +11,18 @@ import {
   CvssStatistic,
   CvssForm,
   CvssGrid,
-  CVSSItem,
-  ButtonGroupLabel,
   Floating,
 } from "./style";
 import { baseMatrices } from "./data";
 import { calculateCVSS31, parseCVSS31Vector } from "./utils/cvss31";
 import { CVSSCalcProps, CVSSMetric } from "./types";
+import { MetricGroup } from "./MetricGroup";
 
 export const CVSSCalc: FC<CVSSCalcProps> = ({
   title = "Common Vulnerability Scoring System",
   vector = "",
   readOnly = false,
-  isShowPopups = true,
+  showHintsOnButton = true,
   onChange,
   className
 }) => {
@@ -80,73 +77,16 @@ export const CVSSCalc: FC<CVSSCalcProps> = ({
     []
   );
 
-  const renderMetricGroup = (metric: CVSSMetric) => {
-    const selectedVal = selections[metric.key];
-
-    return (
-      <CVSSItem key={metric.key}>
-        <Popup
-          trigger={
-            <ButtonGroupLabel tabIndex={0} role="button" aria-label={`Help for ${metric.name}`}>
-              {metric.name}
-            </ButtonGroupLabel>
-          }
-          flowing
-          hoverable
-          disabled={!isShowPopups}
-          hideOnScroll
-          position="bottom left"
-          on={['hover', 'focus']}
-        >
-          <div dangerouslySetInnerHTML={{ __html: metric.help }} />
-        </Popup>
-
-        <Button.Group
-          toggle
-          role="radiogroup"
-          aria-label={metric.name}
-          aria-disabled={readOnly}
-        >
-          {metric.options.map((option, idx) => {
-            const isSelected = selectedVal === option.name;
-            const buttonElement = (
-              <Button
-                key={option.name}
-                content={option.l}
-                name={option.name}
-                primary={isSelected}
-                role="radio"
-                aria-checked={isSelected}
-                aria-label={`${metric.name}: ${option.l}`}
-                tabIndex={readOnly ? -1 : 0}
-                onClick={() => handleSelectOption(metric.key, option.name)}
-              />
-            );
-
-            return (
-              <React.Fragment key={option.name}>
-                {isShowPopups ? (
-                  <Popup
-                    trigger={buttonElement}
-                    flowing
-                    hoverable
-                    hideOnScroll
-                    position="top center"
-                    on={['hover', 'focus']}
-                  >
-                    <div dangerouslySetInnerHTML={{ __html: option.d }} />
-                  </Popup>
-                ) : (
-                  buttonElement
-                )}
-                {idx < metric.options.length - 1 && <Button.Or />}
-              </React.Fragment>
-            );
-          })}
-        </Button.Group>
-      </CVSSItem>
-    );
-  };
+  const renderMetricGroup = (metric: CVSSMetric) => (
+    <MetricGroup
+      key={metric.key}
+      metric={metric}
+      selectedValue={selections[metric.key]}
+      readOnly={readOnly}
+      showHintsOnButton={showHintsOnButton}
+      onSelect={handleSelectOption}
+    />
+  );
 
   return (
     <CvssForm className={className}>
@@ -172,7 +112,7 @@ export const CVSSCalc: FC<CVSSCalcProps> = ({
                   <Statistic.Label>{calculation.ratingDetails.name}</Statistic.Label>
                 </CvssStatistic>
                 <br />
-                <Message
+                <CvssStringComponent
                   compact
                   header={calculation.string ? `CVSS String: ${calculation.string}` : "-"}
                 />

@@ -63,7 +63,7 @@ const App = () => {
       title="Common Vulnerability Scoring System (v3.1)"
       vector={vector}
       readOnly={false}
-      isShowPopups={true}
+      showHints={true}
       onChange={handleChange}
     />
   );
@@ -119,7 +119,7 @@ console.log(rating.color); // "#f2711c"
 | `title` | `string` | `"Common Vulnerability Scoring System"` | Title displayed above the score badge. Pass `""` to hide. |
 | `vector` | `string` | `""` | Initial or controlled CVSS v3.1 vector string. |
 | `readOnly` | `boolean` | `false` | When true, renders buttons as non-interactive display only. |
-| `isShowPopups` | `boolean` | `true` | Enables/disables helpful explanation popups on hover & focus. |
+| `showHints` | `boolean` | `true` | Enables/disables helpful explanation popups on hover & focus. |
 | `onChange` | `(output: CVSSCalculationResult) => void` | `undefined` | Callback fired whenever metric selections change. |
 | `className` | `string` | `undefined` | Optional CSS class name for the wrapper form. |
 

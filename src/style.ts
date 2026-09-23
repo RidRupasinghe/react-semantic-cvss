@@ -96,6 +96,42 @@ export const CvssGrid: React.ComponentType<any> = styled(Grid)`
 
 export const CVSSItem = styled.div`
   margin-bottom: 12px;
+
+  // On narrow screens stretch each group to full width with equal-width buttons
+  @media only screen and (max-width: 500px) {
+    .ui.buttons {
+      display: flex;
+      width: 100%;
+    }
+
+    .ui.buttons .button {
+      flex: 1 1 0;
+      min-width: 0;
+      padding-left: 0.4rem;
+      padding-right: 0.4rem;
+      font-size: 0.9rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    // "or" badges overlap the labels when space is tight, use a thin gap instead
+    .ui.buttons .or {
+      display: none;
+    }
+
+    .ui.buttons .button:not(:first-child) {
+      margin-left: 2px;
+    }
+  }
+
+  @media only screen and (max-width: 400px) {
+    .ui.buttons .button {
+      padding-left: 0.2rem;
+      padding-right: 0.2rem;
+      font-size: 0.8rem;
+    }
+  }
 `;
 
 export const ButtonGroupLabel = styled.div`
@@ -106,7 +142,7 @@ export const ButtonGroupLabel = styled.div`
   color: rgba(0, 0, 0, 0.87) !important;
   text-transform: none !important;
   margin: 6px 1em 6px 0 !important;
-  display: inline-block;
+  // display: inline-block;
   cursor: help;
 `;
 
